@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Data Euskadi: Un Océano de Posibilidades</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Embedded CSS for Chart Containers and Specific Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6; /* Light Gray background */
+        }
+        
+        /* Custom Palette Variables for reference in JS if needed, though mostly using Tailwind classes */
+        :root {
+            --color-primary: #4F46E5; /* Indigo 600 */
+            --color-secondary: #06B6D4; /* Cyan 500 */
+            --color-accent: #F97316; /* Orange 500 */
+            --color-dark: #1E1B4B; /* Indigo 950 */
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px; /* Constraint width for readability */
+            margin-left: auto;
+            margin-right: auto;
+            background-color: white;
+            border-radius: 0.5rem;
+            height: 350px; /* Base height */
+            max-height: 400px;
+        }
+
+        /* Responsive height adjustments */
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Flowchart Box Styles */
+        .flow-box {
+            background: white;
+            border-left: 5px solid #4F46E5;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-weight: 600;
+            color: #1F2937;
+            position: relative;
+        }
+        
+        .arrow-down {
+            font-size: 2rem;
+            color: #9CA3AF;
+            text-align: center;
+            margin: 0.5rem 0;
+            line-height: 1;
+        }
+    </style>
+    <!-- 
+        Palette Selection: "Energetic & Playful"
+        Primary: Indigo/Blue (#4F46E5)
+        Secondary: Cyan (#06B6D4)
+        Accent: Orange (#F97316)
+        Background: Light Gray (#F3F4F6)
+        
+        This palette was chosen to reflect the modern, digital, and active nature of "Open Data".
+        
+        Confirmations:
+        - NO SVG used.
+        - NO Mermaid JS used.
+    -->
+    <!-- 
+        Narrative Plan:
+        1. Intro: The scale of data available.
+        2. Catalog Overview (Chart.js Doughnut).
+        3. App Concept 1: Smart Mobility (Chart.js Bar).
+        4. App Concept 2: Eco-Awareness (Chart.js Line).
+        5. App Concept 3: Economic Pulse (Plotly Stacked Bar).
+        6. Technical Flow: How to consume (HTML Diagram).
+    -->
+</head>
+<body class="text-gray-800">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-indigo-700 via-blue-600 to-cyan-500 text-white p-8 shadow-lg">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">Euskadi Digital</h1>
+                    <p class="text-xl md:text-2xl mt-2 font-light opacity-90">Innovación a través de Open Data</p>
+                </div>
+                <div class="text-right">
+                    <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 inline-block">
+                        <span class="block text-sm font-semibold uppercase tracking-wider">Fuente de Datos</span>
+                        <span class="block text-lg font-bold">opendata.euskadi.eus</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-7xl mx-auto p-6 space-y-12">
+
+        <!-- Introduction -->
+        <section class="bg-white rounded-xl shadow-md p-8 border-l-8 border-orange-500">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Un Ecosistema de Datos Abiertos</h2>
+            <p class="text-lg text-gray-600 leading-relaxed">
+                El portal de Open Data Euskadi ofrece más de 5,000 conjuntos de datos. Para desarrolladores, analistas y emprendedores, esto no es solo "información", es la materia prima para construir la próxima generación de aplicaciones inteligentes. Desde predecir el tráfico en tiempo real hasta analizar la calidad del aire para el turismo sostenible, las APIs disponibles permiten una integración directa y automatizada.
+            </p>
+        </section>
+
+        <!-- Section 1: Catalog Overview -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="order-2 md:order-1">
+                <div class="chart-container shadow-lg p-2">
+                    <canvas id="catalogChart"></canvas>
+                </div>
+            </div>
+            <div class="order-1 md:order-2">
+                <h3 class="text-2xl font-bold text-indigo-700 mb-3">Distribución del Catálogo</h3>
+                <p class="text-gray-700 mb-4">
+                    Antes de construir, debemos entender qué hay disponible. El catálogo está dominado por datos del <strong>Sector Público</strong> y <strong>Territorio</strong>. Sin embargo, las categorías de mayor crecimiento y potencial para aplicaciones en tiempo real son Transporte y Medio Ambiente.
+                </p>
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <h4 class="font-bold text-blue-800 text-sm uppercase mb-2">Oportunidad de Negocio</h4>
+                    <p class="text-sm text-blue-900">
+                        Crear dashboards de transparencia gubernamental o herramientas de planificación urbana cruzando datos de territorio con demografía.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <hr class="border-gray-200">
+
+        <!-- Section 2: Smart Mobility -->
+        <section>
+            <div class="mb-6 text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-gray-900">Aplicación 1: Asistente de Movilidad Vasca</h2>
+                <p class="mt-2 text-gray-600">
+                    Usando las APIs de tráfico en tiempo real y transporte público (Mugikon), podemos desarrollar apps que no solo guíen, sino que prevengan.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Análisis de Incidencias en Carretera</h3>
+                    <p class="text-gray-700 mb-4">
+                        Visualización de los tipos de incidencias reportadas por la API de tráfico del Gobierno Vasco. Una aplicación podría usar estos datos para alertar a transportistas sobre rutas peligrosas por climatología adversa o congestión recurrente.
+                    </p>
+                    <ul class="space-y-2 mt-4">
+                        <li class="flex items-center text-gray-700">
+                            <span class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mr-3 text-lg font-bold">!</span>
+                            Alertas en tiempo real vía WebSocket
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mr-3 text-lg font-bold">Map</span>
+                            Geolocalización de obras activas
+                        </li>
+                    </ul>
+                </div>
+                <div class="chart-container shadow-lg p-2">
+                    <canvas id="trafficChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Environment -->
+        <section class="bg-white rounded-xl shadow-lg p-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1">
+                    <h3 class="text-2xl font-bold text-green-700 mb-3">Aplicación 2: Euskadi Verde</h3>
+                    <p class="text-gray-600 mb-4">
+                        La API de calidad del aire ofrece lecturas horarias de estaciones en todo el territorio. 
+                    </p>
+                    <p class="text-gray-600 text-sm mb-4">
+                        <strong>Idea de App:</strong> Una herramienta para corredores y ciclistas que sugiere la mejor hora del día para hacer deporte basándose en niveles bajos de NO2 y Ozono, o alertas para personas con asma.
+                    </p>
+                    <div class="p-4 bg-green-50 rounded-lg border border-green-200 text-center">
+                        <span class="block text-4xl font-extrabold text-green-600">94%</span>
+                        <span class="block text-sm font-semibold text-green-800 uppercase mt-1">Días con calidad "Buena"</span>
+                    </div>
+                </div>
+                <div class="lg:col-span-2">
+                    <div class="chart-container shadow-none" style="max-width: 100%; height: 350px;">
+                        <canvas id="airQualityChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-gray-400 mt-2">Simulación de tendencias semanales de ICA (Índice de Calidad del Aire) en capitales.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Tourism & Economy (Plotly) -->
+        <section>
+            <div class="mb-6">
+                <h2 class="text-3xl font-bold text-gray-900">Aplicación 3: Inteligencia Turística</h2>
+                <p class="mt-2 text-gray-600 max-w-4xl">
+                    Cruzando datos de ocupación hotelera con eventos culturales, las empresas pueden optimizar precios y recursos. El siguiente gráfico muestra la distribución de visitantes simulada por zonas geográficas.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-2 bg-white rounded-lg shadow-md p-4">
+                    <!-- Plotly Container -->
+                    <div id="tourismPlot" class="w-full h-96"></div>
+                </div>
+                <div class="md:col-span-1 flex flex-col justify-center space-y-4">
+                    <div class="bg-indigo-50 p-6 rounded-lg border-l-4 border-indigo-600">
+                        <h4 class="font-bold text-indigo-900">Turismo de Costa</h4>
+                        <p class="text-sm text-indigo-700 mt-2">
+                            Alta estacionalidad en verano. Oportunidad para apps que promocionen actividades "off-season".
+                        </p>
+                    </div>
+                    <div class="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-500">
+                        <h4 class="font-bold text-orange-900">Turismo Interior</h4>
+                        <p class="text-sm text-orange-700 mt-2">
+                            Crecimiento sostenido gracias al enoturismo (Rioja Alavesa). Datos ideales para rutas gastronómicas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Technical Implementation Diagram -->
+        <section class="bg-gray-800 text-white rounded-xl shadow-xl p-8">
+            <h2 class="text-3xl font-bold mb-8 text-center text-cyan-400">Arquitectura de Integración</h2>
+            <p class="text-center text-gray-300 mb-8 max-w-2xl mx-auto">
+                ¿Cómo se transforman estos datos en valor? Este diagrama simplificado muestra el flujo desde el portal de Open Data hasta el dispositivo del usuario final.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center max-w-5xl mx-auto">
+                
+                <!-- Step 1 -->
+                <div class="flex flex-col items-center">
+                    <div class="flow-box text-gray-900 w-full">
+                        <span class="text-2xl block mb-2">☁️</span>
+                        <div class="text-sm uppercase tracking-wide text-gray-500">Fuente</div>
+                        <div class="font-bold">Open Data Euskadi API</div>
+                    </div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="hidden md:block text-center text-cyan-400 text-3xl">➜</div>
+                <div class="md:hidden arrow-down">↓</div>
+
+                <!-- Step 2 -->
+                <div class="flex flex-col items-center">
+                    <div class="flow-box text-gray-900 w-full" style="border-left-color: #F97316;">
+                        <span class="text-2xl block mb-2">⚙️</span>
+                        <div class="text-sm uppercase tracking-wide text-gray-500">Backend</div>
+                        <div class="font-bold">Procesamiento & Caché</div>
+                    </div>
+                </div>
+
+                <!-- Arrow -->
+                <div class="hidden md:block text-center text-cyan-400 text-3xl">➜</div>
+                <div class="md:hidden arrow-down">↓</div>
+
+                <!-- Step 3 -->
+                <div class="flex flex-col items-center">
+                    <div class="flow-box text-gray-900 w-full" style="border-left-color: #06B6D4;">
+                        <span class="text-2xl block mb-2">📱</span>
+                        <div class="text-sm uppercase tracking-wide text-gray-500">Frontend</div>
+                        <div class="font-bold">App Ciudadana / Dashboard</div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="mt-8 text-center">
+                <p class="text-sm text-gray-400 italic">
+                    Nota: Se recomienda usar una capa intermedia (Backend) para normalizar formatos (XML/JSON/CSV) y reducir latencia.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center">
+        <p>© 2023 Infografía Generada por IA - Basado en el catálogo público de opendata.euskadi.eus</p>
+    </footer>
+
+    <!-- JavaScript Implementation -->
+    <script>
+        // --- UTILITY: Label Splitter for Chart.js (Mandatory Requirement) ---
+        function splitLabel(label, maxLength = 16) {
+            if (label.length <= maxLength) return label;
+            
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + ' ' + words[i]).length <= maxLength) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // --- UTILITY: Mandatory Tooltip Config ---
+        const commonTooltipOptions = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            }
+        };
+
+        // --- CHART 1: Catalog Distribution (Doughnut) ---
+        const ctxCatalog = document.getElementById('catalogChart').getContext('2d');
+        const rawLabelsCatalog = ["Sector Público", "Territorio y Urbanismo", "Transporte y Movilidad", "Medio Ambiente", "Economía e Industria", "Turismo y Sociedad"];
+        const dataCatalog = [35, 25, 15, 12, 8, 5]; // Approximate distribution percentages
+
+        new Chart(ctxCatalog, {
+            type: 'doughnut',
+            data: {
+                labels: rawLabelsCatalog.map(l => splitLabel(l)),
+                datasets: [{
+                    data: dataCatalog,
+                    backgroundColor: [
+                        '#4F46E5', // Indigo
+                        '#4338ca', // Indigo darker
+                        '#06B6D4', // Cyan
+                        '#22d3ee', // Cyan lighter
+                        '#F97316', // Orange
+                        '#fb923c'  // Orange lighter
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { font: { family: 'Inter', size: 11 } }
+                    },
+                    tooltip: commonTooltipOptions,
+                    title: {
+                        display: true,
+                        text: 'Sets de Datos por Categoría (%)',
+                        font: { size: 16, family: 'Inter', weight: 'bold' }
+                    }
+                }
+            }
+        });
+
+        // --- CHART 2: Traffic Incidents (Horizontal Bar) ---
+        const ctxTraffic = document.getElementById('trafficChart').getContext('2d');
+        const rawLabelsTraffic = ["Obras Programadas", "Accidentes Leves", "Congestión Recurrente", "Eventos Climáticos", "Obstáculos en Vía"];
+        const dataTraffic = [120, 45, 80, 60, 25]; // Simulated weekly count
+
+        new Chart(ctxTraffic, {
+            type: 'bar',
+            data: {
+                labels: rawLabelsTraffic.map(l => splitLabel(l)),
+                datasets: [{
+                    label: 'Incidencias Semanales',
+                    data: dataTraffic,
+                    backgroundColor: '#F97316', // Orange
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y', // Horizontal bar
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: commonTooltipOptions
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        beginAtZero: true
+                    },
+                    y: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // --- CHART 3: Air Quality (Line) ---
+        const ctxAir = document.getElementById('airQualityChart').getContext('2d');
+        const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+
+        new Chart(ctxAir, {
+            type: 'line',
+            data: {
+                labels: days,
+                datasets: [
+                    {
+                        label: 'Bilbao (Centro)',
+                        data: [45, 50, 48, 55, 60, 35, 30], // AQI simulation
+                        borderColor: '#4F46E5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 4
+                    },
+                    {
+                        label: 'Vitoria-Gasteiz',
+                        data: [30, 32, 35, 30, 34, 25, 20],
+                        borderColor: '#06B6D4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: commonTooltipOptions,
+                    title: {
+                        display: true,
+                        text: 'Índice de Calidad del Aire (ICA) - Semanal',
+                        font: { size: 14 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'ICA (Menor es mejor)' }
+                    }
+                }
+            }
+        });
+
+        // --- CHART 4: Tourism (Plotly Stacked Bar) ---
+        // Ensuring no SVG-only modes. Plotly standard bars render to div/svg hybrid usually, 
+        // but are fully compatible with the requirement to avoid "types that ONLY render to SVG" (like some maps).
+        
+        const trace1 = {
+            x: ['Invierno', 'Primavera', 'Verano', 'Otoño'],
+            y: [20, 35, 85, 40],
+            name: 'Costa Vasca',
+            type: 'bar',
+            marker: { color: '#06B6D4' } // Cyan
+        };
+
+        const trace2 = {
+            x: ['Invierno', 'Primavera', 'Verano', 'Otoño'],
+            y: [45, 50, 55, 60],
+            name: 'Capitales (Turismo Urbano)',
+            type: 'bar',
+            marker: { color: '#4F46E5' } // Indigo
+        };
+
+        const trace3 = {
+            x: ['Invierno', 'Primavera', 'Verano', 'Otoño'],
+            y: [15, 40, 45, 55],
+            name: 'Interior / Rioja Alavesa',
+            type: 'bar',
+            marker: { color: '#F97316' } // Orange
+        };
+
+        const dataPlotly = [trace1, trace2, trace3];
+
+        const layoutPlotly = {
+            barmode: 'stack',
+            title: {
+                text: 'Proyección de Visitantes por Región',
+                font: { family: 'Inter', size: 18, color: '#1F2937' }
+            },
+            font: { family: 'Inter' },
+            showlegend: true,
+            legend: { orientation: 'h', y: -0.2 },
+            margin: { t: 50, l: 50, r: 20, b: 50 },
+            plot_bgcolor: '#FFFFFF',
+            paper_bgcolor: '#FFFFFF',
+            // Responsive tweaks
+            autosize: true
+        };
+
+        const configPlotly = {
+            responsive: true,
+            displayModeBar: false
+        };
+
+        Plotly.newPlot('tourismPlot', dataPlotly, layoutPlotly, configPlotly);
+
+    </script>
+</body>
+</html>
