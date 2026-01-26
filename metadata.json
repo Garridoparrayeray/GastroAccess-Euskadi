@@ -1,0 +1,8 @@
+
+{
+  "name": "GastroAccess Euskadi",
+  "description": "Una PWA diseñada para ayudar a personas con diversidad funcional a encontrar restaurantes 100% accesibles en el País Vasco, con filtros inteligentes y geolocalización.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
