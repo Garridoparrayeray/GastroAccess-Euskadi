@@ -1,6 +1,6 @@
 import React from 'react';
 import { Restaurant } from '../types';
-import { Phone, Globe, MapPin, AlertCircle, ShieldCheck, X, Star, Sun } from 'lucide-react';
+import { Phone, Globe, MapPin } from 'lucide-react';
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
@@ -9,12 +9,9 @@ interface RestaurantCardProps {
 
 const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClose }) => {
   const handleDirections = () => {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${restaurant.lat},${restaurant.lng}`;
+    const url = `http://maps.google.com/?q=${restaurant.lat},${restaurant.lng}`;
     window.open(url, '_blank');
   };
-
-  const hasMichelin = restaurant.michelinStar && restaurant.michelinStar !== "" && restaurant.michelinStar !== "0";
-  const hasRepsol = restaurant.repsolSun && restaurant.repsolSun !== "" && restaurant.repsolSun !== "0";
 
   // Función para determinar el estilo de la etiqueta de accesibilidad
   const getAccessBadge = () => {
@@ -22,7 +19,8 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClose }) 
       return { text: 'Accesibilidad Total', className: 'bg-emerald-600 text-white' };
     }
     if (restaurant.accessScore === 'Plata') {
-      return { text: 'Física Adaptada', className: 'bg-amber-500 text-white' };
+      // Cambio de texto: ya no garantizamos que sea física, solo que tiene "algo"
+      return { text: 'Accesibilidad Parcial', className: 'bg-amber-500 text-white' };
     }
     // Caso Estándar
     return { text: 'Acceso Estándar', className: 'bg-slate-200 text-slate-500' };
@@ -31,56 +29,46 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClose }) 
   const badge = getAccessBadge();
 
   return (
-    <div className="bg-white rounded-t-3xl md:rounded-3xl shadow-2xl p-6 relative max-w-2xl mx-auto border-t-4 border-slate-300">
-      <button 
-        onClick={onClose}
-        className="absolute right-4 top-4 p-2 text-slate-400 hover:text-slate-600 rounded-full h-11 w-11 flex items-center justify-center"
-        aria-label="Cerrar detalles"
-      >
-        <X size={24} />
-      </button>
-
-      <div className="flex flex-wrap items-center gap-2 mb-3">
-        {/* Etiqueta Accesibilidad Corregida */}
-        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${badge.className}`}>
-          {badge.text}
-        </span>
-        
-        {hasMichelin && (
-          <span className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded-full text-[10px] font-black border border-red-700 uppercase tracking-widest shadow-sm">
-            <Star size={10} fill="currentColor" /> Michelin {restaurant.michelinStar}*
+    <div className="bg-white rounded-t-3xl shadow-2xl p-6 animate-slide-up max-h-[85vh] overflow-y-auto w-full max-w-md mx-auto relative">
+      <div className="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-6" />
+      
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 ${badge.className}`}>
+            {badge.text}
           </span>
-        )}
-
-        {hasRepsol && (
-          <span className="flex items-center gap-1 px-3 py-1 bg-yellow-400 text-yellow-900 rounded-full text-[10px] font-black border border-yellow-500 uppercase tracking-widest shadow-sm">
-            <Sun size={10} fill="currentColor" /> Soles Repsol: {restaurant.repsolSun}
-          </span>
-        )}
+          <h2 className="text-2xl font-bold text-slate-900 leading-tight mb-1">{restaurant.documentName}</h2>
+          <p className="text-slate-500 text-sm">{restaurant.municipality}</p>
+        </div>
+        <button 
+          onClick={onClose}
+          className="p-2 bg-slate-100 rounded-full hover:bg-slate-200 transition-colors"
+        >
+          <span className="sr-only">Cerrar</span>
+          <svg className="w-6 h-6 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
-      <h2 className="text-2xl font-black text-slate-900 mb-2 leading-tight">
-        {restaurant.documentName}
-      </h2>
-      
-      <p className="text-slate-600 text-sm mb-6 leading-relaxed">
-        {restaurant.documentDescription || "Sin descripción disponible."}
-      </p>
-
-      {/* ... resto del componente igual ... */}
-       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-        <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
-          <MapPin className="text-emerald-500" size={20} />
-          <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 font-bold uppercase">Ubicación</span>
-            <span className="text-sm font-bold text-slate-700">{restaurant.municipality}</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
-          <ShieldCheck className="text-emerald-500" size={20} />
-          <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 font-bold uppercase">Categoría</span>
-            <span className="text-sm font-bold text-slate-700">{restaurant.restorationType}</span>
+      <div className="space-y-4 mb-8">
+        <p className="text-slate-600 leading-relaxed">
+            {restaurant.documentDescription || "Sin descripción disponible."}
+        </p>
+        
+        <div className="flex flex-wrap gap-2">
+          {restaurant.michelinStar && restaurant.michelinStar !== "0" && (
+             <span className="px-3 py-1 bg-red-50 text-red-600 border border-red-100 rounded-lg text-sm font-semibold flex items-center gap-1">
+               ⭐ Michelin: {restaurant.michelinStar}
+             </span>
+          )}
+          {restaurant.repsolSun && restaurant.repsolSun !== "0" && (
+             <span className="px-3 py-1 bg-orange-50 text-orange-600 border border-orange-100 rounded-lg text-sm font-semibold flex items-center gap-1">
+               ☀️ Soles Repsol: {restaurant.repsolSun}
+             </span>
+          )}
+          <div className="px-3 py-1 bg-slate-50 text-slate-600 border border-slate-100 rounded-lg text-sm font-medium">
+             {restaurant.restorationType}
           </div>
         </div>
       </div>
@@ -113,10 +101,6 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClose }) 
           </a>
         )}
       </div>
-
-      <p className="mt-6 text-center text-slate-400 text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2">
-        <AlertCircle size={12} /> Datos verificados por GastroAccess
-      </p>
     </div>
   );
 };

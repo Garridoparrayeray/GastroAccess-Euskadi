@@ -37,15 +37,18 @@ export const useRestaurants = (userLocation: UserLocation | null) => {
             const isVisual = checkAccess(item.visual);
             const isAuditive = checkAccess(item.auditive);
             
-            // LÓGICA CORREGIDA:
-            // Estándar por defecto.
-            // Plata solo si es físico.
-            // Oro si es físico + visual + auditivo.
+            // LÓGICA MODIFICADA (OPCIÓN 1): Sistema de Puntos
             let accessScore: 'Oro' | 'Plata' | 'Estándar' = 'Estándar';
             
-            if (isPhysical) {
-                accessScore = (isVisual && isAuditive) ? 'Oro' : 'Plata';
+            // Contamos cuántas características de accesibilidad tiene (0 a 3)
+            const featuresCount = [isPhysical, isVisual, isAuditive].filter(Boolean).length;
+
+            if (featuresCount === 3) {
+                accessScore = 'Oro';   // Tiene las 3 (Física + Visual + Auditiva)
+            } else if (featuresCount > 0) {
+                accessScore = 'Plata'; // Tiene al menos 1 de las 3
             }
+            // Si es 0, se queda en Estándar
 
             return {
               ...item,
