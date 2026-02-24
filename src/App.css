@@ -40,3 +40,28 @@
 .read-the-docs {
   color: #888;
 }
+/* Asegura que el contenedor de Leaflet no rompa el diseño */
+.leaflet-container {
+  font-family: inherit;
+}
+
+/* Animación suave para la aparición de la carta */
+@keyframes slide-in-from-bottom-10 {
+  from {
+    transform: translateY(10%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-in {
+  animation: slide-in-from-bottom-10 0.3s ease-out;
+}
+
+/* Evitar que el scroll del mapa moleste en móviles */
+body {
+  overscroll-behavior-y: contain;
+}

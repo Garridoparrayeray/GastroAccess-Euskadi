@@ -1,9 +1,23 @@
-
 import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import { Restaurant, UserLocation } from '../types';
+
+// --- NUEVO COMPONENTE: Fuerza la actualización del tamaño del mapa ---
+// Esto soluciona el problema de que el mapa se quede gris o cortado al cargar
+const MapResizer = () => {
+  const map = useMap();
+  useEffect(() => {
+    // Da tiempo a que React pinte el contenedor con Tailwind antes de calcular el tamaño
+    const timeout = setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
+    return () => clearTimeout(timeout);
+  }, [map]);
+  return null;
+};
+// --------------------------------------------------------------------
 
 interface MapComponentProps {
   restaurants: Restaurant[];
@@ -78,6 +92,9 @@ const MapComponent: React.FC<MapComponentProps> = ({
         scrollWheelZoom={true}
         className="h-full w-full"
       >
+        {/* COMPONENTE RESIZER AÑADIDO AQUÍ */}
+        <MapResizer />
+        
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -88,7 +105,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
           </Marker>
         )}
 
-        <MarkerClusterGroup chunkedLoading>
+       {/* Le añadimos un 'key' dinámico para que los pines se borren y se vuelvan a pintar al filtrar */}
+        <MarkerClusterGroup chunkedLoading key={restaurants.map(r => r.documentName).join(',')}>
           {restaurants.map((rest, idx) => (
             <Marker 
               key={idx}

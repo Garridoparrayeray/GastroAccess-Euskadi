@@ -118,21 +118,7 @@
     "municipality": "Errenteria",
     "restorationType": "Restaurante"
   },
-  {
-    "documentName": "La Revelía",
-    "documentDescription": "El restaurante La Revelia en su interior se diseña en tonos oscuros con paredes y revestim...",
-    "phone": "+(34) 943 672 112",
-    "physical": "1",
-    "visual": "1",
-    "auditive": "1",
-    "web": "https://larevelia.com/",
-    "michelinStar": "1",
-    "repsolSun": "1",
-    "latwgs84": "43.2649124",
-    "lonwgs84": "-2.7531414",
-    "municipality": "Amorebieta-Etxano",
-    "restorationType": "Restaurante"
-  },
+  
  {
   "documentName" : "Agorregi",
   "documentDescription" : "El restaurante Agorregi, ubicado en el barrio de Igara de San Sebastián, ofrece un servici...",
