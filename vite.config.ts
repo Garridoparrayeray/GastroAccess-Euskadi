@@ -3,7 +3,9 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '.', '');
+    // Cargamos las variables de entorno desde la raíz del proyecto
+    const env = loadEnv(mode, process.cwd(), '');
+    
     return {
       server: {
         port: 3000,
@@ -11,6 +13,7 @@ export default defineConfig(({ mode }) => {
       },
       plugins: [react()],
       define: {
+        // Exponemos las variables de Gemini para que tu código las pueda leer
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
       },
